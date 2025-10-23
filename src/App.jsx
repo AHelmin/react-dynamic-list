@@ -4,7 +4,10 @@ import './App.css';
 import { List, EmptyMessage } from './components'
 
 export default function App() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(() => {
+    const savedItems = localStorage.getItem('items');
+    return savedItems ? JSON.parse(savedItems) : [];
+  });
   const [text, setText] = useState('');
   const [isEmptyItems, setIsEmptyItems] = useState(true)
 
@@ -38,9 +41,11 @@ export default function App() {
     } else {
       setIsEmptyItems(false)
     }
-    // console.log(items)
-    // console.log(isEmptyItems)
-  }, [items])
+  }, [items]);
+
+  useEffect(() => {
+    localStorage.setItem('items', JSON.stringify(items))
+  }, [items]);
 
   return (
     <div style={{ fontFamily: "system-ui", padding: 16, maxWidth: 520 }}>
